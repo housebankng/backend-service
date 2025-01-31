@@ -15,8 +15,22 @@ declare module '@hapi/hapi' {
 const UserRoutePlugin: Hapi.Plugin<null> = {
     name: 'userRoute',
     register: async (server: Hapi.Server) => {
+        console.log('Registering user routes...'); 
+
         server.route([
-            { method: 'POST', path: '/api/v1/users', handler: createUserHandler, options: { auth: false } },
+            { 
+                method: 'POST', 
+                path: '/api/v1/users', 
+                handler: createUserHandler, 
+                options: { 
+                    auth: false,
+                    payload: { 
+                        parse: true, 
+                        allow: 'application/json'  
+                    }
+                } 
+            },
+            
             { method: 'GET', path: '/api/v1/users', handler: fetchUsersHandler, options: { auth: false } },
             { method: 'GET', path: '/api/v1/users/{id}', handler: getUserByIdHandler, options: { auth: false } },
             { method: 'PUT', path: '/api/v1/users/{id}', handler: updateUserHandler, options: { auth: false } },
@@ -25,11 +39,13 @@ const UserRoutePlugin: Hapi.Plugin<null> = {
             { method: 'GET', path: '/api/v1/users/list', handler: listUsersHandler, options: { auth: false } }
 
         ]);
+        console.log('User routes registered successfully.');
     },
 };
 
 // Create User Handler
 const createUserHandler = async (request: Hapi.Request, h: Hapi.ResponseToolkit) => {
+    console.log('Received Payload:', request.payload);
     const { fullname, email, password, roles } = request.payload as { fullname: string; email: string; password: string; roles: Role[] };
     const prisma = request.server.app.prisma as PrismaClient;
 
