@@ -16,9 +16,14 @@ const init = async () => {
     });
 
     await server.register(require('@hapi/inert'));
+
+
     //custom plugins
-    await server.register([prismaPlugin]);
-    await server.register([UserRoutePlugin]);
+    await server.register([prismaPlugin, UserRoutePlugin]);
+
+    console.log('Registered Plugins:', server.registrations);
+    console.log('Registered Routes:', server.table().map(route => route.path));
+
 
     server.route({
         method: 'GET',
