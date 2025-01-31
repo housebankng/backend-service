@@ -3,6 +3,7 @@
 import Hapi, { Server } from '@hapi/hapi';
 import * as dotenv from 'dotenv';
 import prismaPlugin from './plugins/prisma';
+import UserRoutePlugin from './plugins/userRoutePlugin';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const init = async () => {
     await server.register(require('@hapi/inert'));
     //custom plugins
     await server.register([prismaPlugin]);
+    await server.register([UserRoutePlugin]);
 
     server.route({
         method: 'GET',
